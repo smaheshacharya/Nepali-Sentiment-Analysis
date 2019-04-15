@@ -18,10 +18,9 @@ def split_doc():
 	return data_with_split # it returns arr of each docs with spleted words
 word_lists = {}
 word_lists = split_doc() 
-print(len(word_lists))
 length_of_docs = len(word_lists)
 my_set = set.union(*map(set,word_lists))# seperate each individual words from data to make matrix
-# print(len(my_set))
+print(len(my_set))
 #remove stop words 
 ##########################################
 f = open('stopwords.txt', 'r')
@@ -36,31 +35,21 @@ stop_word_collection = split_stop_words()
 stop_word_dict = set.union(*map(set,stop_word_collection))
 my_set = my_set-stop_word_dict
 # print(stop_word_dict)
-# print("afetr removiing stop word")
+print("afetr removiing stop word")
 # print(len(my_set))
 ########################################################
-doc ={}
 word_dict  = {}
-for i in range(len(word_lists)):
-	for word in word_lists[i]:
-		word_dict = dict.fromkeys(my_set,0)
-		# print(word_dict)
+for i in range(1,len(my_set)):
+	word_dict = dict.fromkeys(my_set,0)
+print(word_dict)
+
 
 ### count each words from each docs
-def count_occurence_of_word_vocab():
-	for count_word_value in word_lists:
-		for word in count_word_value:
-			if word in word_dict:
-				word_dict[word] += 1
-	return word_dict
-# ### count each words from each docs
-i = 0
-for  each_document in word_lists:
-	for each_word,val in word_dict.items():
-		if each_word in each_document:
-			word_dict[each_word] += 1
+for count_word_value in word_lists:
+	for word in count_word_value:
+		if word in word_dict:
+			word_dict[word] += 1
 	print(word_dict)
-				
 
 def computeTf(worddict,docs_list):
 	tfDict = {}
@@ -71,6 +60,7 @@ def computeTf(worddict,docs_list):
 tf = {}
 for each_line in word_lists:
 	 tf = computeTf(word_dict,each_line)
+	 print(tf)
 # convert_dict_list = []
 # for keyin word_dict.items():
 # 	list_dict = [key]

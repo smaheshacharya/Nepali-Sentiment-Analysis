@@ -7,6 +7,8 @@ text1 = "ब्रिज मेकअप गर्नको लागि सब�
 
 bow1 = text.split()
 bow2 = text1.split()
+print("bow1")
+print(bow1)
 
 #
 # def get_stopwords():
