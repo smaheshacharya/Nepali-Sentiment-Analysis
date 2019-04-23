@@ -63,7 +63,7 @@ doc_vec2 = []
 for line in word_lists:
 	doc_vec1 = vectorizer_docs(line)
 	doc_vec2.append(doc_vec1)
-
+print(doc_vec2)
 
 
 def computeTf(docs_list):
@@ -128,7 +128,7 @@ print(idf_vec)
 
 TfIdf_vec = []
 def computeTfIdf(Tfvec,Idfvec):
-	TfIdf_vec = np.multiply(Tfvec,Idfvec)
+	TfIdf_vec = [a*b for a,b in zip(Tfvec,Idfvec)]
 	return TfIdf_vec
 
 
@@ -137,6 +137,7 @@ tfidf_vector_collection = []
 for tf_list,idf_list in zip(tf_vec,idf_vec):#zip helps to iteration two different collection samultaneously
 	tfidf_vector_for_each_docs = computeTfIdf(tf_list,idf_list)
 	tfidf_vector_collection.append(tfidf_vector_for_each_docs)
+print("Print TFIDF vec")
 print(tfidf_vector_collection)
 
 
