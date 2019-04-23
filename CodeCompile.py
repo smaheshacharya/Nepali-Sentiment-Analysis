@@ -4,7 +4,7 @@ from functools import reduce
 from collections import Counter
 import numpy as np
 
-df = pd.read_csv('merge.csv',delimiter = ',');
+df = pd.read_csv('merge.csv',delimiter = ',',names=['Data','Label']);
 # print(df)
 first_col = df.ix[1:,0]
 # print(first_row)
@@ -71,7 +71,8 @@ def computeTf(docs_list):
 	tf_each_doc_vec = []
 	doc_word_count = len(docs_list)
 	count_each_word = Counter(docs_list)# counter count the word in list how many times it occure
-	for each_word,count in count_each_word.items():
+	for each_word in docs_list:
+		count = count_each_word.get(each_word)
 		tf_vec.append(count/float(doc_word_count))
 	tf_each_doc_vec.append(tf_vec)
 	return tf_each_doc_vec
