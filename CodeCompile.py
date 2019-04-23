@@ -4,17 +4,17 @@ from functools import reduce
 from collections import Counter
 import numpy as np
 
-df = pd.read_csv('merge.csv',delimiter = ',',names=['Data','Label']);
+df = pd.read_csv('merge.csv',delimiter = ',');
 # print(df)
-first_row = df.ix[1:,0]
+first_col = df.ix[1:,0]
 # print(first_row)
-second_row  = df.ix[1:,1]
+second_col  = df.ix[1:,1]
 # print(second_row)
 data_with_split = []
 each_docs = []
 stop_words_split_final=[]
 def split_doc():
-	for data in first_row:
+	for data in first_col:
 		each_docs = data.split()
 		data_with_split.append(each_docs)
 	return data_with_split # it returns arr of each docs with spleted words
@@ -24,6 +24,7 @@ length_of_docs = len(word_lists)
 def individual_words():
 	my_set = set.union(*map(set,word_lists))# seperate each individual words from data to make matrix
 	return my_set
+
 
 def set_to_list():
 	my_set_list = individual_words()
@@ -81,7 +82,7 @@ for each_line in word_lists:
 	 tf = computeTf(each_line)
 	 tf_vec += tf
 print("Term Frequency")
-print(len(tf_vec))
+print(tf_vec)
 
 countIdfforwordvalue = {}
 word_dict = count_occurence_of_word_vocab()
@@ -122,13 +123,13 @@ for each_line in word_lists:
 	 idf = computeIdf(each_line)
 	 idf_vec += idf
 print("Inverse document frequency")
-print(len(idf_vec))  
+print(idf_vec)  
 
 
 TfIdf_vec = []
 def computeTfIdf(Tfvec,Idfvec):
 	TfIdf_vec = np.multiply(Tfvec,Idfvec)
-	print(TfIdf_vec)
+	return TfIdf_vec
 
 
 tfidf_vector_for_each_docs = []
