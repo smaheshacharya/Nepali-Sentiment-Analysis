@@ -3,6 +3,7 @@ import math as mth
 from functools import reduce
 from collections import Counter
 import numpy as np
+from sklearn.naive_bayes import GaussianNB
 
 df = pd.read_csv('merge.csv',delimiter = ',',names=['Data','Label']);
 # print(df)
@@ -138,11 +139,31 @@ tfidf_vector_collection = []
 for tf_list,idf_list in zip(tf_vec,idf_vec):#zip helps to iteration two different collection samultaneously
 	tfidf_vector_for_each_docs = computeTfIdf(tf_list,idf_list)
 	tfidf_vector_collection.append(tfidf_vector_for_each_docs)
-print("Print TFIDF vec")
-print(tfidf_vector_collection)
+print("Print feature vec")
 
 
+# make model with sk-learn
 
+features = np.asarray(tfidf_vector_collection)
+labels = np.asarray(second_col)
+array_length = len(features)
+features_taken_len = int(array_length * 80/100)#80% of data make for train 20% remening data for testing
+feature_array_train = features[:features_taken_len]#80% of data make for train 20% remening data for testing
+labels_array_train = labels[:features_taken_len]
+feature_array_test = features[features_taken_len:]#80% of data make for train 20% remening data for testing
+labels_array_test = labels[features_taken_len:]
+# print("train")
+# print(feature_array_train)
+# print(labels_array_train)
+# print("test")
+# print(feature_array_test)
+# print(labels_array_test)
+
+
+# Naive byes classifier sklearn
+
+Naive_byes = GaussianNB()
+TrainData = Naive_byes.fit(feature_array_train,labels_array_train)
 
 
 
