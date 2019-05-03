@@ -66,8 +66,10 @@ def count_occurence_of_word_vocab():
 
 
 word_dict = count_occurence_of_word_vocab()
-print(len(word_dict))
+# print(len(word_dict))
 
+
+length_word_dict = len(word_dict)
 
 def vectorizer_docs(line):
     vectorizer_docs = []
@@ -86,7 +88,7 @@ doc_vec2 = []
 for line in word_lists:
     doc_vec1 = vectorizer_docs(line)
     doc_vec2.append(doc_vec1)
-print(doc_vec2)
+# print(doc_vec2)
 
 
 def computeTf(docs_list):
@@ -109,8 +111,8 @@ tf_vec = []
 for each_line in word_lists:
     tf = computeTf(each_line)
     tf_vec += tf
-print("Term Frequency")
-print(tf_vec)
+# print("Term Frequency")
+# print(tf_vec)
 
 countIdfforwordvalue = {}
 word_dict = count_occurence_of_word_vocab()
@@ -178,12 +180,15 @@ tfidf_vector_collection = []
 for tf_list, idf_list in zip(tf_vec, idf_vec):  # zip helps to iteration two different collection samultaneously
     tfidf_vector_for_each_docs = computeTfIdf(tf_list, idf_list)
     tfidf_vector_collection.append(tfidf_vector_for_each_docs)
-print("Print feature vec")
+
 
 # make model with sk-learn
 
 features = np.array(tfidf_vector_collection)
-labels = np.array(second_col)
+labels_string = np.array(second_col)
+labels_list = [int(int_labels) for int_labels in labels_string]
+labels = np.array(labels_list)
+
 
 array_length = len(features)
 # print(type(features))
@@ -191,13 +196,13 @@ array_length = len(features)
 features_taken_len = int(array_length * 80 / 100)  # 80% of data make for train 20% remening data for testing
 feature_array_train = features[:features_taken_len]  # 80% of data make for train 20% remening data for testing
 labels_array_train = labels[:features_taken_len]
-print(len(feature_array_train))
-print(len(labels_array_train))
-
 feature_array_test = features[features_taken_len:]  # 80% of data make for train 20% remening data for testing
-labels_array_test = labels[features_taken_len:]
+labels_array_test =  labels[features_taken_len:]
 
-final_labels = labels_array_test.reshape(1,-1)
+# print(feature_array_train.shape)
+# print(labels_array_train.shape)
+
+# final_labels = labels_array_test.reshape(1,-1)
 # final_feature_test = feature_array_test.reshape(1,-1)
 # print(type(feature_array_test))
 # print(type(labels_array_test))
@@ -212,64 +217,73 @@ final_labels = labels_array_test.reshape(1,-1)
 
 
 # Naive byes classifier sklearn
-
+#train model
 naive_byes = GaussianNB()  # create  object  from  GaussianNb  class
 TrainData = naive_byes.fit(feature_array_train, labels_array_train)
-print("generet picekl file")
+
 classifier_data = open("classify_data.pickle", "wb")
 pickle.dump(TrainData, classifier_data)
 classifier_data.close()
+
+#test model
+TestData = GaussianNB()
+TestData.partial_fit(feature_array_test, labels_array_test, classes=np.unique(labels_array_test))
+
 
 with open('classify_data.pickle', 'rb') as pickle_saved_data:
     unpickled_data = pickle.load(pickle_saved_data)
 
 
 
-print("***************************************")
-input_data = input("Type Text For Prediction")
-each_input_word = []
-# change into array of word
-each_input_word = input_data.split()
-
-#input data from user
-length_input_data = len(each_input_word)
-
-count_each_inputword = Counter(each_input_word)
-input_data_tfvec = []
-# tf_each_input_word = []
-#TF computation of input data
-
-
-length_word_dict = len(word_dict)
-for word,val in word_dict.items():#where word_dict is all the word collection from data set
-    if word in each_input_word:
-        count = count_each_inputword.get(word)
-        input_data_tfvec.append(count / float(length_input_data))
-    else:
-        input_data_tfvec.append(0)
-# to make predict input value similar as our training sample we use reshape
-value_for_predict = np.array(input_data_tfvec).reshape(1,-1)
-predict = unpickled_data.predict(value_for_predict)
-print(predict)
-
+predict_result = unpickled_data.predict(feature_array_test)
+print("predict")
+print(predict_result)
 
 
 #calculate precision recall and f measure
-print(final_labels.shape)
-print(predict.shape)
+# print(final_labels.shape)
+# print(predict.shape)
 
 
-precision = metrics.precision_score(predict,final_labels)
+precision = metrics.precision_score(labels_array_test ,predict_result ,average='weighted')
 print("precision")
 print(precision)
 
 
-recall = metrics.recall_score(feature_array_test, labels_array_test)
+recall = metrics.recall_score(labels_array_test, predict_result,average='weighted')
 print("recall")
 print(recall)
 
 
 
 f_score = 2*(precision*recall)/(precision+recall)
+print("f_score")
+print(f_score)
 
-print(fscore)
+
+#
+# #prediction after taking input from user
+# print("***************************************")
+# input_data = input("Type Text For Prediction ")
+# each_input_word = []
+# # change into array of word
+# each_input_word = input_data.split()
+#
+# #input data from user
+# length_input_data = len(each_input_word)
+#
+# count_each_inputword = Counter(each_input_word)
+# input_data_tfvec = []
+# # tf_each_input_word = []
+# #TF computation of input data
+#
+# for word,val in word_dict.items():#where word_dict is all the word collection from data set
+#     if word in each_input_word:
+#         count = count_each_inputword.get(word)
+#         input_data_tfvec.append(count / float(length_input_data))
+#     else:
+#         input_data_tfvec.append(0)
+# # to make predict input value similar as our training sample we use reshape
+# value_for_predict = np.array(input_data_tfvec).reshape(1,-1)
+# predict = unpickled_data.predict(value_for_predict)
+# print(predict)
