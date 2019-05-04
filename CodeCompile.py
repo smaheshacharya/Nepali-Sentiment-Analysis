@@ -181,7 +181,9 @@ for tf_list, idf_list in zip(tf_vec, idf_vec):  # zip helps to iteration two dif
     tfidf_vector_for_each_docs = computeTfIdf(tf_list, idf_list)
     tfidf_vector_collection.append(tfidf_vector_for_each_docs)
 
-
+print("WordDict")
+print(word_dict)
+print(len(word_dict))
 # make model with sk-learn
 
 features = np.array(tfidf_vector_collection)
@@ -245,12 +247,12 @@ print(predict_result)
 # print(predict.shape)
 
 
-precision = metrics.precision_score(labels_array_test ,predict_result ,average='weighted')
+precision = metrics.precision_score(predict_result,labels_array_test ,average='weighted')
 print("precision")
 print(precision)
 
 
-recall = metrics.recall_score(labels_array_test, predict_result,average='weighted')
+recall = metrics.recall_score(predict_result,labels_array_test,average='weighted')
 print("recall")
 print(recall)
 
