@@ -37,27 +37,27 @@ print(f_score)
 
 #
 # #prediction after taking input from user
-# print("***************************************")
-# input_data = input("Type Text For Prediction ")
-# each_input_word = []
-# # change into array of word
-# each_input_word = input_data.split()
-#
-# #input data from user
-# length_input_data = len(each_input_word)
-#
-# count_each_inputword = Counter(each_input_word)
-# input_data_tfvec = []
-# # tf_each_input_word = []
-# #TF computation of input data
-#
-# for word,val in word_dict.items():#where word_dict is all the word collection from data set
-#     if word in each_input_word:
-#         count = count_each_inputword.get(word)
-#         input_data_tfvec.append(count / float(length_input_data))
-#     else:
-#         input_data_tfvec.append(0)
-# # to make predict input value similar as our training sample we use reshape
-# value_for_predict = np.array(input_data_tfvec).reshape(1,-1)
-# predict = unpickled_data.predict(value_for_predict)
-# print(predict)
+print("***************************************")
+input_data = input("Type Text For Prediction ")
+each_input_word = []
+# change into array of word
+each_input_word = input_data.split()
+
+#input data from user
+length_input_data = len(each_input_word)
+
+count_each_inputword = Counter(each_input_word)
+input_data_tfvec = []
+# tf_each_input_word = []
+#TF computation of input data
+
+for word,val in word_dict.items():#where word_dict is all the word collection from data set
+    if word in each_input_word:
+        count = count_each_inputword.get(word)
+        input_data_tfvec.append(count / float(length_input_data))
+    else:
+        input_data_tfvec.append(0)
+# to make predict input value similar as our training sample we use reshape
+value_for_predict = np.array(input_data_tfvec).reshape(1,-1)
+predict = unpickled_data.predict(value_for_predict)
+print(predict)
