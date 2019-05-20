@@ -9,7 +9,7 @@ import datetime
 import random
 import sys
 from sklearn import metrics
-
+import re
 
 now = str(datetime.datetime.now())
 
@@ -24,14 +24,17 @@ each_docs = []
 stop_words_split_final = []
 
 
-#collection of stop words
 
-
+#data cleaning method
+def data_preprocessing(string):
+    text = re.sub('\,|\@|\-|\"|\'| \)|\(|\)| \{| \}| \[| \]|!|‘|’|“|”| \:-|\?|।|/|\—', '', string)
+    return text
 
 
 def split_doc():
     for data in first_col:
-        each_docs = data.split()
+        return_string = data_preprocessing(data)
+        each_docs = return_string.split()
         data_with_split.append(each_docs)
     return data_with_split  # it returns arr of each docs with spleted words
 
@@ -40,6 +43,9 @@ word_lists = []
 word_lists = split_doc()
 length_of_docs = len(word_lists)
 
+
+
+print(word_lists)
 
 def individual_words():
     my_set = set.union(*map(set, word_lists))  # seperate each individual words from data to make matrix
@@ -179,7 +185,7 @@ for tf_list, idf_list in zip(tf_vec, idf_vec):  # zip helps to iteration two dif
     tfidf_vector_collection.append(tfidf_vector_for_each_docs)
 # make model with sk-learn
 
-features = np.array(tf_vec)
+features = np.array(tfidf_vector_collection)
 labels_string = np.array(second_col)
 # print(labels_string)
 labels_list = [int(int_labels) for int_labels in labels_string]
