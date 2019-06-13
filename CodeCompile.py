@@ -9,7 +9,7 @@ import datetime
 import random
 import sys
 from sklearn import metrics
-import re
+import collections
 
 now = str(datetime.datetime.now())
 
@@ -23,32 +23,29 @@ data_with_split = []
 each_docs = []
 stop_words_split_final = []
 
+# f = open('stopwords.txt', 'r')
+# line = f.readline()
+# def split_stop_words():
+#     for word_array in line:
+#         stop_words_split_final.append(word_array)
+#     return(stop_words_split_final)
+# stop_words = split_stop_words()
 
-
-#data cleaning method
-def data_preprocessing(string):
-    text = re.sub('\,|\@|\-|\"|\'| \)|\(|\)| \{| \}| \[| \]|!|‘|’|“|”| \:-|\?|।|/|\—', '', string)
-    return text
-
-
-def split_doc():
+# stop_words = ['छ','र','पनि','छन्','लागि','भएको','गरेको','भने','गर्न','गर्ने','हो','तथा','यो','छैन']
+def SPLITDOCUMENT():
     for data in first_col:
-        return_string = data_preprocessing(data)
-        each_docs = return_string.split()
-        data_with_split.append(each_docs)
+        each_line = data.split()
+        data_with_split.append(each_line)
     return data_with_split  # it returns arr of each docs with spleted words
 
 
-word_lists = []
-word_lists = split_doc()
-length_of_docs = len(word_lists)
-
-
-
-print(word_lists)
+word_arrays = []
+word_arrays = SPLITDOCUMENT()
+length_of_docs = len(word_arrays)
+print(word_arrays)
 
 def individual_words():
-    my_set = set.union(*map(set, word_lists))  # seperate each individual words from data to make matrix
+    my_set = set.union(*map(set, word_arrays))  # seperate each individual words from data to make matrix
     return my_set
 
 
@@ -58,18 +55,18 @@ def set_to_list():
     return convert_into_list
 
 
-individual_word_list = set_to_list()
+individual_word_array = set_to_list()
 
 
 def count_occurence_of_word_vocab():
     my_set = individual_words()
     doc = {}
     word_dict = {}
-    for i in range(len(word_lists)):
-        for word in word_lists[i]:
+    for i in range(len(word_arrays)):
+        for word in word_arrays[i]:
             word_dict = dict.fromkeys(my_set, 0)
 
-    for count_word_value in word_lists:
+    for count_word_value in word_arrays:
         for word in count_word_value:
             if word in word_dict:
                 word_dict[word] += 1
@@ -77,7 +74,7 @@ def count_occurence_of_word_vocab():
 
 
 word_dict = count_occurence_of_word_vocab()
-
+print(len(word_dict))
 
 
 length_word_dict = len(word_dict)
@@ -85,7 +82,7 @@ length_word_dict = len(word_dict)
 def vectorizer_docs(line):
     vectorizer_docs = []
     matrix_doc = []
-    for word in individual_word_list:
+    for word in individual_word_array:
         if word in line:
             vectorizer_docs.append(1)
         else:
@@ -96,12 +93,12 @@ def vectorizer_docs(line):
 
 doc_vec1 = []
 doc_vec2 = []
-for line in word_lists:
+for line in word_arrays:
     doc_vec1 = vectorizer_docs(line)
     doc_vec2.append(doc_vec1)
 # print(doc_vec2)
 
-dict1={}
+
 def computeTf(docs_list):
     tf_vec = []
     tf_each_doc_vec = []
@@ -119,7 +116,7 @@ def computeTf(docs_list):
 
 tf = []
 tf_vec = []
-for each_line in word_lists:
+for each_line in word_arrays:
     tf = computeTf(each_line)
     tf_vec += tf
 # print("Term Frequency")
@@ -130,25 +127,26 @@ word_dict = count_occurence_of_word_vocab()
 my_set = individual_words()
 
 
-def computeCountDict(word_dict, word_lists):
+def computeCountDict(word_dict, word_arrays):
     countIdfforword = {}
     for i in range(1, len(my_set)):
         countIdfforword = dict.fromkeys(my_set, 0)
     for word, value in word_dict.items():
-        for each_line_item in word_lists:
+        for each_line_item in word_arrays:
             if word in each_line_item:
                 countIdfforword[word] += 1
         # else:
-        # 	countIdfforword[word] = 1
+        #   countIdfforword[word] = 1
     return countIdfforword
 
 
-countIdfforwordvalue = computeCountDict(word_dict, word_lists)
+countIdfforwordvalue = computeCountDict(word_dict, word_arrays)
+
 
 #  #  return no of doc conatin word for each word
 #  def doc_contain_word(parameter_word):
-# 		word_value_in_each_doc = countIdfforwordvalue.get(parameter_word)
-# 		return word_value_in_each_doc
+#       word_value_in_each_doc = countIdfforwordvalue.get(parameter_word)
+#       return word_value_in_each_doc
 
 
 def computeIdf(docs_list):
@@ -166,14 +164,21 @@ def computeIdf(docs_list):
 
 idf = []
 idf_vec = []
-for each_line in word_lists:
+for each_line in word_arrays:
     idf = computeIdf(each_line)
     idf_vec += idf
+# print("Inverse document frequency")
+# print(len(idf_vec[0]))
+# print(len(idf_vec[2]))
+# print(len(idf_vec[3]))
+# print(len(idf_vec[4]))
+# print(len(idf_vec[5]))
+# print(len(idf_vec[6]))
 
 TfIdf_vec = []
 
 
-def computeTfIdf(Tfvec, Idfvec):
+def TFIDF(Tfvec, Idfvec):
     TfIdf_vec = [a * b for a, b in zip(Tfvec, Idfvec)]
     return TfIdf_vec
 
@@ -181,13 +186,14 @@ def computeTfIdf(Tfvec, Idfvec):
 tfidf_vector_for_each_docs = []
 tfidf_vector_collection = []
 for tf_list, idf_list in zip(tf_vec, idf_vec):  # zip helps to iteration two different collection samultaneously
-    tfidf_vector_for_each_docs = computeTfIdf(tf_list, idf_list)
+    tfidf_vector_for_each_docs = TFIDF(tf_list, idf_list)
     tfidf_vector_collection.append(tfidf_vector_for_each_docs)
 # make model with sk-learn
 
 features = np.array(tfidf_vector_collection)
 labels_string = np.array(second_col)
-# print(labels_string)
+
+
 labels_list = [int(int_labels) for int_labels in labels_string]
 labels = np.array(labels_list)
 
@@ -195,12 +201,27 @@ labels = np.array(labels_list)
 array_length = len(features)
 # print(type(features))
 
-features_taken_len = int(array_length * 80 / 100)  # 80% of data make for train 20% remening data for testing
+features_taken_len = int(array_length * 92 / 100)  # 80% of data make for train 20% remening data for testing
 feature_array_train = features[:features_taken_len]  # 80% of data make for train 20% remening data for testing
 labels_array_train = labels[:features_taken_len]
 feature_array_test = features[features_taken_len:]  # 80% of data make for train 20% remening data for testing
 labels_array_test =  labels[features_taken_len:]
 
+# print(feature_array_train.shape)
+# print(labels_array_train.shape)
+
+# final_labels = labels_array_test.reshape(1,-1)
+# final_feature_test = feature_array_test.reshape(1,-1)
+# print(type(feature_array_test))
+# print(type(labels_array_test))
+#
+# print(feature_array_test)
+# print("train")
+# print(feature_array_train)
+# print(labels_array_train)
+# print("test")
+# print(feature_array_test)
+# print(labels_array_test)
 
 
 # Naive byes classifier sklearn
@@ -211,21 +232,6 @@ TrainData = naive_byes.fit(feature_array_train, labels_array_train)
 classifier_data = open("classify_data.pickle", "wb")
 pickle.dump(TrainData, classifier_data)
 classifier_data.close()
-# naive_byes_test = GaussianNB()
-# TestData = naive_byes_test.partial_fit(feature_array_test, labels_array_test, classes=np.unique(labels_array_test))
-# predict_result = TrainData.predict(feature_array_test)
-
-
-# print("predict using test data")
-# print(predict_result)
-#calculate precision recall and f measure
-# print(final_labels.shape)
-# print(predict.shape)
-
-
-# #test model
-# naive_byes_test = GaussianNB()
-# TestData = naive_byes_test.partial_fit(feature_array_test, labels_array_test, classes=np.unique(labels_array_test))
 
 
 with open('classify_data.pickle', 'rb') as pickle_saved_data:
@@ -234,8 +240,8 @@ with open('classify_data.pickle', 'rb') as pickle_saved_data:
 
 
 predict_result = unpickled_data.predict(feature_array_test)
-# print("predict")
-# print(predict_result)
+print("predict")
+print(predict_result)
 
 
 #calculate precision recall and f measure
@@ -260,83 +266,28 @@ print(f_score)
 
 
 #
-####################for TFIDF of input data we need dict in bellow format####################
-
-# {doc1:{word1:count1},{word2:count2}}
-
-# >>> d = {}
-# >>> d['dict1'] = {}
-# >>> d['dict1']['innerkey'] = 'value'
-# >>> d
-# {'dict1': {'innerkey': 'value'}}
-dict_for_idf = {}
-
-def count_each_word_each_doc():
-    i = 1
-    for each_line_for_idf in word_lists:
-        dict_for_idf[i] = {}
-        count_each_word_for_idf = Counter(each_line_for_idf) 
-        for each_word_of_line_for_idf in each_line_for_idf:
-            count_for_idf = count_each_word_for_idf.get(each_word_of_line_for_idf)
-            dict_for_idf[i][each_word_of_line_for_idf] = count_for_idf
-        i = i+1 
-    return dict_for_idf
-dict_for_idf_final = count_each_word_each_doc()
-
-
-
-
-
+# #prediction after taking input from user
 print("***************************************")
 input_data = input("Type Text For Prediction ")
-# to make predict input value similar as our training sample we use reshape
-
-
-def input_tf(input_data):
-
-    each_input_word = []
+each_input_word = []
 # change into array of word
-    each_input_word = input_data.split()
+each_input_word = input_data.split()
 
 #input data from user
-    length_input_data = len(each_input_word)
+length_input_data = len(each_input_word)
 
-    count_each_inputword = Counter(each_input_word)
-    input_data_tfvec = []
+count_each_inputword = Counter(each_input_word)
+input_data_tfvec = []
 # tf_each_input_word = []
 #TF computation of input data
 
-    for word,val in word_dict.items():#where word_dict is all the word collection from data set
-        if word in each_input_word:
-            count = count_each_inputword.get(word)
-            input_data_tfvec.append(count / float(length_input_data))
-        else:
-            input_data_tfvec.append(0)
-    return input_data_tfvec
-
-tf_value_of_input_data = input_tf(input_data)
-
-
-def input_idf(input_data):
-    idf_vec_input_data = []
-    idf_each_doc_vec_input_data = []
-    for each_word_input_data,val in word_dict.items():
-        if each_word_input_data in input_data:
-            word_value_in_each_doc_input_data = countIdfforwordvalue.get(each_word_input_data)
-            idf_each_doc_vec_input_data.append(mth.log(length_of_docs / word_value_in_each_doc_input_data))
-        else:
-            idf_each_doc_vec_input_data.append(0)
-    return idf_each_doc_vec_input_data
-
-
-idf_value_of_input_data = input_idf(input_data)
-
-def computeTfIdf_input(tf_value_of_input_data, idf_value_of_input_data):
-    tfidf_input_vec = [a * b for a, b in zip(tf_value_of_input_data, idf_value_of_input_data)]
-    return tfidf_input_vec
-
-TfIdf_value_of_input_data = computeTfIdf_input(tf_value_of_input_data,idf_value_of_input_data)
-
-value_for_predict = np.array(TfIdf_value_of_input_data).reshape(1,-1)
+for word,val in word_dict.items():#where word_dict is all the word collection from data set
+    if word in each_input_word:
+        count = count_each_inputword.get(word)
+        input_data_tfvec.append(count / float(length_input_data))
+    else:
+        input_data_tfvec.append(0)
+# to make predict input value similar as our training sample we use reshape
+value_for_predict = np.array(input_data_tfvec).reshape(1,-1)
 predict = unpickled_data.predict(value_for_predict)
 print(predict)
