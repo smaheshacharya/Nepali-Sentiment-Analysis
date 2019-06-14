@@ -1,7 +1,7 @@
 import pandas as pd
 import math as mth
 from functools import reduce
-from collections import Counter
+from collections import Counter 
 import numpy as np
 from sklearn.naive_bayes import GaussianNB
 import pickle

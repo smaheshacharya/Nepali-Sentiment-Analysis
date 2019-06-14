@@ -76,12 +76,12 @@ idf = computeIdf(text1_dict)
 print("idf")
 print(idf)
 
-def computeTfidf(tfbow,idf):
-	tfidf = {}
+def computecompute_TfIdf(tfbow,idf):
+	compute_TfIdf = {}
 	for word , val in tfbow.items():
-		tfidf[word] =val*idf[word]
-	return tfidf
+		compute_TfIdf[word] =val*idf[word]
+	return compute_TfIdf
 
-tfidf1 = computeTfidf(tfBowa,idf)
-tfidf2 = computeTfidf(tfBowb,idf)
-print(pd.DataFrame([tfidf1,tfidf2]))
+compute_TfIdf1 = computecompute_TfIdf(tfBowa,idf)
+compute_TfIdf2 = computecompute_TfIdf(tfBowb,idf)
+print(pd.DataFrame([compute_TfIdf1,compute_TfIdf2]))

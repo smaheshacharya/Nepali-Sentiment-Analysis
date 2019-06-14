@@ -30,7 +30,7 @@ stop_words_split_final = []
 
 
 
-def SPLITDOCUMENT():
+def split_doc():
     for data in first_col:
         each_docs = data.split()
         data_with_split.append(each_docs)
@@ -38,7 +38,7 @@ def SPLITDOCUMENT():
 
 
 word_arrays = []
-word_arrays = SPLITDOCUMENT()
+word_arrays = split_doc()
 length_of_docs = len(word_arrays)
 
 
@@ -173,19 +173,19 @@ for each_line in word_arrays:
 # print(len(idf_vec[5]))
 # print(len(idf_vec[6]))
 
-TfIdf_vec = []
+compute_TfIdf_vec = []
 
 
-def TFIDF(Tfvec, Idfvec):
-    TfIdf_vec = [a * b for a, b in zip(Tfvec, Idfvec)]
-    return TfIdf_vec
+def compute_TfIdf(Tfvec, Idfvec):
+    compute_TfIdf_vec = [a * b for a, b in zip(Tfvec, Idfvec)]
+    return compute_TfIdf_vec
 
 
-tfidf_vector_for_each_docs = []
-tfidf_vector_collection = []
+compute_TfIdf_vector_for_each_docs = []
+compute_TfIdf_vector_collection = []
 for tf_list, idf_list in zip(tf_vec, idf_vec):  # zip helps to iteration two different collection samultaneously
-    tfidf_vector_for_each_docs = TFIDF(tf_list, idf_list)
-    tfidf_vector_collection.append(tfidf_vector_for_each_docs)
+    compute_TfIdf_vector_for_each_docs = compute_TfIdf(tf_list, idf_list)
+    compute_TfIdf_vector_collection.append(compute_TfIdf_vector_for_each_docs)
 # make model with sk-learn
 
 features = np.array(tf_vec)
@@ -280,7 +280,7 @@ print(f_score)
 
 
 #
-####################for TFIDF of input data we need dict in bellow format####################
+####################for compute_TfIdf of input data we need dict in bellow format####################
 
 # {doc1:{word1:count1},{word2:count2}}
 count_each_word = {}

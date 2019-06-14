@@ -94,13 +94,13 @@ def computeCountDict(word_dict,word_lists):
 
 countIdfforwordvalue = computeCountDict(word_dict,word_lists)
 
-def computeTfidf(tf,idf):
-	tfidf = {}
+def computecompute_TfIdf(tf,idf):
+	compute_TfIdf = {}
 	for i in range(1,len(my_set)):
-		tfidf = dict.fromkeys(my_set,0)
+		compute_TfIdf = dict.fromkeys(my_set,0)
 	for word , val in tf.items():
-		tfidf[word] = val*mth.log(idf[word]/length_of_docs)
-	return tfidf
+		compute_TfIdf[word] = val*mth.log(idf[word]/length_of_docs)
+	return compute_TfIdf
 
-tfidf_result = computeTfidf(tf,countIdfforwordvalue)
-print(tfidf_result)
+compute_TfIdf_result = computecompute_TfIdf(tf,countIdfforwordvalue)
+print(compute_TfIdf_result)

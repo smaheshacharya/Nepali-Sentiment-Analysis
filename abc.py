@@ -30,7 +30,7 @@ print(f_score)
 
 
 #
-####################for TFIDF of input data we need dict in bellow format####################
+####################for compute_TfIdf of input data we need dict in bellow format####################
 
 # {doc1:{word1:count1},{word2:count2}}
 
@@ -101,12 +101,12 @@ def input_idf(input_data):
 
 idf_value_of_input_data = input_idf(input_data)
 
-def computeTfIdf_input(tf_value_of_input_data, idf_value_of_input_data):
-    tfidf_input_vec = [a * b for a, b in zip(tf_value_of_input_data, idf_value_of_input_data)]
-    return tfidf_input_vec
+def computecompute_TfIdf_input(tf_value_of_input_data, idf_value_of_input_data):
+    compute_TfIdf_input_vec = [a * b for a, b in zip(tf_value_of_input_data, idf_value_of_input_data)]
+    return compute_TfIdf_input_vec
 
-TfIdf_value_of_input_data = computeTfIdf_input(tf_value_of_input_data,idf_value_of_input_data)
+compute_TfIdf_value_of_input_data = computecompute_TfIdf_input(tf_value_of_input_data,idf_value_of_input_data)
 
-value_for_predict = np.array(TfIdf_value_of_input_data).reshape(1,-1)
+value_for_predict = np.array(compute_TfIdf_value_of_input_data).reshape(1,-1)
 predict = unpickled_data.predict(value_for_predict)
 print(predict)
