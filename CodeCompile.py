@@ -29,7 +29,7 @@ stop_words_split_final = []
 def data_preprocessing(string):
     text = re.sub('\,|\@|\-|\"|\'| \)|\(|\)| \{| \}| \[| \]|!|‘|’|“|”| \:-|\?|।|/|\—', '', string)
     return text
-
+#hello
 
 def split_doc():
     for data in first_col:
