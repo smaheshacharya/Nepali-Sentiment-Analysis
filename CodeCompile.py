@@ -45,7 +45,7 @@ length_of_docs = len(word_lists)
 
 
 #####################################
-# print(word_lists)
+print(word_lists)
 
 def individual_words():
     my_set = set.union(*map(set, word_lists))  # seperate each individual words from data to make matrix
@@ -197,7 +197,7 @@ labels = np.array(labels_list)
 array_length = len(features)
 # print(type(features))
 
-features_taken_len = int(array_length * 92 / 100)  # 80% of data make for train 20% remening data for testing
+features_taken_len = int(array_length * 80 / 100)  # 80% of data make for train 20% remening data for testing
 feature_array_train = features[:features_taken_len]  # 80% of data make for train 20% remening data for testing
 labels_array_train = labels[:features_taken_len]
 feature_array_test = features[features_taken_len:]  # 80% of data make for train 20% remening data for testing
