@@ -211,10 +211,11 @@ labels_array_test =  labels[features_taken_len:]
 #train model
 naive_byes = GaussianNB()  # create  object  from  GaussianNb  class
 TrainData = naive_byes.fit(feature_array_train, labels_array_train)
-
-classifier_data = open("classify_data.pickle", "wb")
-pickle.dump(TrainData, classifier_data)
-classifier_data.close()
+if __name__ == '__main__':
+    
+    classifier_data = open("classify_data.pickle", "wb")
+    pickle.dump(TrainData, classifier_data)
+    classifier_data.close()
 
 # naive_byes_test = GaussianNB()
 # TestData = naive_byes_test.partial_fit(feature_array_test, labels_array_test, classes=np.unique(labels_array_test))
