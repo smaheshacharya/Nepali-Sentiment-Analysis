@@ -45,7 +45,7 @@ length_of_docs = len(word_lists)
 
 
 #####################################
-print(word_lists)
+# print(word_lists)
 
 def individual_words():
     my_set = set.union(*map(set, word_lists))  # seperate each individual words from data to make matrix
@@ -82,23 +82,23 @@ word_dict = count_occurence_of_word_vocab()
 
 length_word_dict = len(word_dict)
 
-# def vectorizer_docs(line):
-#     vectorizer_docs = []
-#     matrix_doc = []
-#     for word in individual_word_list:
-#         if word in line:
-#             vectorizer_docs.append(1)
-#         else:
-#             vectorizer_docs.append(0)
-#     return vectorizer_docs
-#     vectorizer_docs.clear()
+def vectorizer_docs(line):
+    vectorizer_docs = []
+    matrix_doc = []
+    for word in individual_word_list:
+        if word in line:
+            vectorizer_docs.append(1)
+        else:
+            vectorizer_docs.append(0)
+    return vectorizer_docs
+    vectorizer_docs.clear()
 
 
-# doc_vec1 = []
-# doc_vec2 = []
-# for line in word_lists:
-#     doc_vec1 = vectorizer_docs(line)
-#     doc_vec2.append(doc_vec1)
+doc_vec1 = []
+doc_vec2 = []
+for line in word_lists:
+    doc_vec1 = vectorizer_docs(line)
+    doc_vec2.append(doc_vec1)
 # print(doc_vec2)
 
 dict1={}
@@ -185,6 +185,7 @@ tfidf_vector_collection = []
 for tf_list, idf_list in zip(tf_vec, idf_vec):  # zip helps to iteration two different collection samultaneously
     tfidf_vector_for_each_docs = computeTfIdf(tf_list, idf_list)
     tfidf_vector_collection.append(tfidf_vector_for_each_docs)
+# print(tfidf_vector_collection)
 # make model with sk-learn
 
 features = np.array(tfidf_vector_collection)
@@ -197,14 +198,15 @@ labels = np.array(labels_list)
 array_length = len(features)
 # print(type(features))
 
-features_taken_len = int(array_length * 80 / 100)  # 80% of data make for train 20% remening data for testing
+features_taken_len = int(array_length * 50 / 100)  # 80% of data make for train 20% remening data for testing
 feature_array_train = features[:features_taken_len]  # 80% of data make for train 20% remening data for testing
 labels_array_train = labels[:features_taken_len]
 feature_array_test = features[features_taken_len:]  # 80% of data make for train 20% remening data for testing
 labels_array_test =  labels[features_taken_len:]
 
 
-
+# print(len(feature_array_train))
+# print(len(labels_array_train))
 # Naive byes classifier sklearn
 #train model
 naive_byes = GaussianNB()  # create  object  from  GaussianNb  class
@@ -237,23 +239,26 @@ with open('classify_data.pickle', 'rb') as pickle_saved_data:
 
 
 predict_result = unpickled_data.predict(feature_array_test)
+ 
 
+print(predict_result)
+print(labels_array_test)
 
 # print("predict")
 # print(predict_result)
 
-
+# print(set(predict_result) - set(labels_array_test))
 #calculate precision recall and f measure
 # print(final_labels.shape)
 # print(predict.shape)
 
 
-precision = metrics.precision_score(predict_result,labels_array_test ,average='weighted')
+precision = metrics.precision_score(labels_array_test,predict_result ,average='weighted')
 print("precision")
 print(precision)
 
 
-recall = metrics.recall_score(predict_result,labels_array_test,average='weighted')
+recall = metrics.recall_score(labels_array_test,predict_result,average='weighted')
 print("recall")
 print(recall)
 
