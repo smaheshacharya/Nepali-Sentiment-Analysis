@@ -197,16 +197,18 @@ labels = np.array(labels_list)
 
 array_length = len(features)
 # print(type(features))
-
-features_taken_len = int(array_length * 50 / 100)  # 80% of data make for train 20% remening data for testing
+# from sklearn.model_selection import train_test_split
+features_taken_len = int(array_length * 70/ 100)  # 80% of data make for train 20% remening data for testing
 feature_array_train = features[:features_taken_len]  # 80% of data make for train 20% remening data for testing
 labels_array_train = labels[:features_taken_len]
 feature_array_test = features[features_taken_len:]  # 80% of data make for train 20% remening data for testing
 labels_array_test =  labels[features_taken_len:]
+# feature_array_train, feature_array_test, labels_array_train, labels_array_test = train_test_split(features,labels, test_size=0.33, random_state=42)
 
-
-# print(len(feature_array_train))
+print(len(feature_array_train))
 # print(len(labels_array_train))
+print(len(feature_array_test))
+
 # Naive byes classifier sklearn
 #train model
 naive_byes = GaussianNB()  # create  object  from  GaussianNb  class
@@ -254,7 +256,7 @@ print(labels_array_test)
 # print(predict.shape)
 
 
-precision = metrics.precision_score(labels_array_test,predict_result ,average='weighted')
+precision = metrics.precision_score(labels_array_test,predict_result ,average='weighted', labels=np.unique(predict_result))#yo labels=np.unique(predict_result) garda predict nabhayako label calculation ma use hundai na ra error dindaina
 print("precision")
 print(precision)
 
@@ -302,12 +304,14 @@ print("***************************************")
 input_data = input("Type Text For Prediction ")
 # to make predict input value similar as our training sample we use reshape
 
-
 def input_tf(input_data):
 
     each_input_word = []
 # change into array of word
-    each_input_word = input_data.split()
+    input_return_string = data_preprocessing(input_data)
+
+    each_input_word = input_return_string.split()
+    print(each_input_word)
 
 #input data from user
     length_input_data = len(each_input_word)
