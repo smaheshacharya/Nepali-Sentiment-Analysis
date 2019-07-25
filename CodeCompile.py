@@ -30,12 +30,20 @@ def data_preprocessing(string):
     text = re.sub('\,|\@|\-|\"|\'| \)|\(|\)| \{| \}| \[| \]|!|‘|’|“|”| \:-|\?|।|/|\—', '', string)
     return text
 #hello
+def stop_word_remove(array_element):
+    stop_words = set(['मैले','छ','र','तर','को','मा','म','त','यो','ती','न','पनि','छन्','अब','के','छु','भए','यस','ले','लागि','भन','हरे','हरेक','हो','तथा','भएको','गरेको','भने','गर्न','गर्ने','यी','का','गरि','कि','जुन','गरेर','छैन','अलग','आए','अझै','गए','गरौं','गर्छ','गर्छु','कतै','जब','जबकि','जसको','तल','भर','जे','जो','ठीक','धेरै','नजिकै','नत्र'])
+    array_element_set = set(array_element)
+    final_list = list(array_element_set.difference(stop_words))
+    return final_list
+    
 
 def split_doc():
     for data in first_col:
         return_string = data_preprocessing(data)
         each_docs = return_string.split()
-        data_with_split.append(each_docs)
+        string_after_remove_word=stop_word_remove(each_docs)
+        print(string_after_remove_word)
+        data_with_split.append(string_after_remove_word)
     return data_with_split  # it returns arr of each docs with spleted words
 
 
