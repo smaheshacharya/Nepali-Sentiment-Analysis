@@ -9,16 +9,18 @@ import datetime
 import random
 import sys
 from sklearn import metrics
-import re
+import re,time
 
 now = str(datetime.datetime.now())
 
-df = pd.read_csv('merge.csv', delimiter=',', names=['Data', 'Label']);
+df = pd.read_csv('mergeData.csv', delimiter=',', names=['Data', 'Label']);
 # print(df)
+
 first_col = df.ix[1:, 0]
 # print(first_row)
 second_col = df.ix[1:, 1]
-# print(second_row)
+second_col = second_col.fillna(0)
+print(second_col.isna().sum())
 data_with_split = []
 each_docs = []
 stop_words_split_final = []
@@ -42,7 +44,7 @@ def split_doc():
         return_string = data_preprocessing(data)
         each_docs = return_string.split()
         string_after_remove_word=stop_word_remove(each_docs)
-        print(string_after_remove_word)
+        # print(string_after_remove_word)
         data_with_split.append(string_after_remove_word)
     return data_with_split  # it returns arr of each docs with spleted words
 
@@ -213,9 +215,9 @@ feature_array_test = features[features_taken_len:]  # 80% of data make for train
 labels_array_test =  labels[features_taken_len:]
 # feature_array_train, feature_array_test, labels_array_train, labels_array_test = train_test_split(features,labels, test_size=0.33, random_state=42)
 
-print(len(feature_array_train))
-# print(len(labels_array_train))
-print(len(feature_array_test))
+# print(len(feature_array_train))
+# # print(len(labels_array_train))
+# print(len(feature_array_test))
 
 # Naive byes classifier sklearn
 #train model
@@ -252,8 +254,8 @@ with open('classify_data.pickle', 'rb') as pickle_saved_data:
 predict_result = unpickled_data.predict(feature_array_test)
  
 
-print(predict_result)
-print(labels_array_test)
+# print(predict_result)
+# print(labels_array_test)
 
 # print("predict")
 # print(predict_result)
@@ -319,7 +321,7 @@ def input_tf(input_data):
     input_return_string = data_preprocessing(input_data)
 
     each_input_word = input_return_string.split()
-    print(each_input_word)
+    # print(each_input_word)
 
 #input data from user
     length_input_data = len(each_input_word)
