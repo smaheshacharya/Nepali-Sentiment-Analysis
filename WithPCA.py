@@ -9,17 +9,18 @@ import datetime
 import random
 import sys
 from sklearn import metrics
-import re
-from random import randrange
-from sklearn.model_selection import train_test_split
+import re,time
+
 now = str(datetime.datetime.now())
 
-df = pd.read_csv('merge.csv', quotechar='"', names=['Data', 'Label']);
+df = pd.read_csv('mergeData.csv', delimiter=',', names=['Data', 'Label']);
 # print(df)
+
 first_col = df.ix[1:, 0]
-print(first_col)
+# print(first_row)
 second_col = df.ix[1:, 1]
-print(second_col)
+second_col = second_col.fillna(0)
+print(second_col.isna().sum())
 data_with_split = []
 each_docs = []
 stop_words_split_final = []
@@ -31,12 +32,20 @@ def data_preprocessing(string):
     text = re.sub('\,|\@|\-|\"|\'| \)|\(|\)| \{| \}| \[| \]|!|‘|’|“|”| \:-|\?|।|/|\—', '', string)
     return text
 #hello
+def stop_word_remove(array_element):
+    stop_words = set(['मैले','छ','र','तर','को','मा','म','त','यो','ती','न','पनि','छन्','अब','के','छु','भए','यस','ले','लागि','भन','हरे','हरेक','हो','तथा','भएको','गरेको','भने','गर्न','गर्ने','यी','का','गरि','कि','जुन','गरेर','छैन','अलग','आए','अझै','गए','गरौं','गर्छ','गर्छु','कतै','जब','जबकि','जसको','तल','भर','जे','जो','ठीक','धेरै','नजिकै','नत्र'])
+    array_element_set = set(array_element)
+    final_list = list(array_element_set.difference(stop_words))
+    return final_list
+    
 
 def split_doc():
     for data in first_col:
         return_string = data_preprocessing(data)
         each_docs = return_string.split()
-        data_with_split.append(each_docs)
+        string_after_remove_word=stop_word_remove(each_docs)
+        # print(string_after_remove_word)
+        data_with_split.append(string_after_remove_word)
     return data_with_split  # it returns arr of each docs with spleted words
 
 
@@ -83,23 +92,23 @@ word_dict = count_occurence_of_word_vocab()
 
 length_word_dict = len(word_dict)
 
-# def vectorizer_docs(line):
-#     vectorizer_docs = []
-#     matrix_doc = []
-#     for word in individual_word_list:
-#         if word in line:
-#             vectorizer_docs.append(1)
-#         else:
-#             vectorizer_docs.append(0)
-#     return vectorizer_docs
-#     vectorizer_docs.clear()
+def vectorizer_docs(line):
+    vectorizer_docs = []
+    matrix_doc = []
+    for word in individual_word_list:
+        if word in line:
+            vectorizer_docs.append(1)
+        else:
+            vectorizer_docs.append(0)
+    return vectorizer_docs
+    vectorizer_docs.clear()
 
 
-# doc_vec1 = []
-# doc_vec2 = []
-# for line in word_lists:
-#     doc_vec1 = vectorizer_docs(line)
-#     doc_vec2.append(doc_vec1)
+doc_vec1 = []
+doc_vec2 = []
+for line in word_lists:
+    doc_vec1 = vectorizer_docs(line)
+    doc_vec2.append(doc_vec1)
 # print(doc_vec2)
 
 dict1={}
@@ -141,7 +150,7 @@ def computeCountDict(word_dict, word_lists):
             if word in each_line_item:
                 countIdfforword[word] += 1
         # else:
-        # 	countIdfforword[word] = 1
+        #   countIdfforword[word] = 1
     return countIdfforword
 
 
@@ -149,8 +158,8 @@ countIdfforwordvalue = computeCountDict(word_dict, word_lists)
 
 #  #  return no of doc conatin word for each word
 #  def doc_contain_word(parameter_word):
-# 		word_value_in_each_doc = countIdfforwordvalue.get(parameter_word)
-# 		return word_value_in_each_doc
+#       word_value_in_each_doc = countIdfforwordvalue.get(parameter_word)
+#       return word_value_in_each_doc
 
 
 def computeIdf(docs_list):
@@ -181,18 +190,15 @@ def computeTfIdf(Tfvec, Idfvec):
     return TfIdf_vec
 
 
-
-
-
 tfidf_vector_for_each_docs = []
 tfidf_vector_collection = []
 for tf_list, idf_list in zip(tf_vec, idf_vec):  # zip helps to iteration two different collection samultaneously
     tfidf_vector_for_each_docs = computeTfIdf(tf_list, idf_list)
     tfidf_vector_collection.append(tfidf_vector_for_each_docs)
+# print(tfidf_vector_collection)
 # make model with sk-learn
 
 features = np.array(tfidf_vector_collection)
-print(type(second_col))
 labels_string = np.array(second_col)
 # print(labels_string)
 labels_list = [int(int_labels) for int_labels in labels_string]
@@ -201,49 +207,43 @@ labels = np.array(labels_list)
 
 array_length = len(features)
 # print(type(features))
-
-features_taken_len = int(array_length * 80 / 100)  # 80% of data make for train 20% remening data for testing
-# feature_train_test = np.split(features, [features_taken_len,features_taken_len*2, features_taken_len*3,features_taken_len*4 ])
-# label_train_test = np.split(labels, [features_taken_len,features_taken_len*2, features_taken_len*3,features_taken_len*4 ])
-# feature_array_train, feature_array_test, labels_array_train, labels_array_test = train_test_split( features, labels, test_size=0.33, random_state=42)
-
+# from sklearn.model_selection import train_test_split
+features_taken_len = int(array_length * 70/ 100)  # 80% of data make for train 20% remening data for testing
 feature_array_train = features[:features_taken_len]  # 80% of data make for train 20% remening data for testing
 labels_array_train = labels[:features_taken_len]
 feature_array_test = features[features_taken_len:]  # 80% of data make for train 20% remening data for testing
 labels_array_test =  labels[features_taken_len:]
+# feature_array_train, feature_array_test, labels_array_train, labels_array_test = train_test_split(features,labels, test_size=0.33, random_state=42)
 
-#############################cross_validation_split
-# def cross_validation_split(dataset, labels, folds):
-# 	dataset_split_features = list()
-# 	dataset_split_labels = list()
-# 	dataset_features = dataset
-# 	dataset_labels = labels
-# 	fold_size = int(len(dataset) / folds)
-# 	for i in range(folds):
-# 		fold_features = list()
-# 		fold_labels = list()
-# 		while len(fold_features) < fold_size:
-# 			index_features = randrange(len(dataset_features))
-# 			fold_features.append(dataset_features.pop(index_features))
-# 			index_labels = randrange(len(dataset_labels))
-# 			fold_labels.append(dataset_labels.pop(index_labels))
-# 		dataset_split_features.append(fold_features)
-# 		dataset_split_labels.append(fold_labels)
+# print(len(feature_array_train))
+# # print(len(labels_array_train))
+# print(len(feature_array_test))
 
-# 	return dataset_split_features,dataset_split_labels
-# # Naive byes classifier sklearn
-# #train model
-
-# features,labels = cross_validation_split(word_lists,labels_list,4)
-
-
+# Naive byes classifier sklearn
+#train model
 naive_byes = GaussianNB()  # create  object  from  GaussianNb  class
 TrainData = naive_byes.fit(feature_array_train, labels_array_train)
+if __name__ == '__main__':
+    
+    classifier_data = open("classify_data.pickle", "wb")
+    pickle.dump(TrainData, classifier_data)
+    classifier_data.close()
 
-classifier_data = open("classify_data.pickle", "ab")
-pickle.dump(TrainData, classifier_data)
-classifier_data.close()
-	
+# naive_byes_test = GaussianNB()
+# TestData = naive_byes_test.partial_fit(feature_array_test, labels_array_test, classes=np.unique(labels_array_test))
+# predict_result = TrainData.predict(feature_array_test)
+
+
+# print("predict using test data")
+# print(predict_result)
+#calculate precision recall and f measure
+# print(final_labels.shape)
+# print(predict.shape)
+
+
+# #test model
+# naive_byes_test = GaussianNB()
+# TestData = naive_byes_test.partial_fit(feature_array_test, labels_array_test, classes=np.unique(labels_array_test))
 
 
 with open('classify_data.pickle', 'rb') as pickle_saved_data:
@@ -252,19 +252,26 @@ with open('classify_data.pickle', 'rb') as pickle_saved_data:
 
 
 predict_result = unpickled_data.predict(feature_array_test)
+ 
 
+# print(predict_result)
+# print(labels_array_test)
 
+# print("predict")
+# print(predict_result)
+
+# print(set(predict_result) - set(labels_array_test))
 #calculate precision recall and f measure
 # print(final_labels.shape)
 # print(predict.shape)
 
 
-precision = metrics.precision_score(predict_result,labels_array_test ,average='weighted')
+precision = metrics.precision_score(labels_array_test,predict_result ,average='weighted', labels=np.unique(predict_result))#yo labels=np.unique(predict_result) garda predict nabhayako label calculation ma use hundai na ra error dindaina
 print("precision")
 print(precision)
 
 
-recall = metrics.recall_score(predict_result,labels_array_test,average='weighted')
+recall = metrics.recall_score(labels_array_test,predict_result,average='weighted')
 print("recall")
 print(recall)
 
@@ -307,12 +314,14 @@ print("***************************************")
 input_data = input("Type Text For Prediction ")
 # to make predict input value similar as our training sample we use reshape
 
-
 def input_tf(input_data):
 
     each_input_word = []
 # change into array of word
-    each_input_word = input_data.split()
+    input_return_string = data_preprocessing(input_data)
+
+    each_input_word = input_return_string.split()
+    # print(each_input_word)
 
 #input data from user
     length_input_data = len(each_input_word)
