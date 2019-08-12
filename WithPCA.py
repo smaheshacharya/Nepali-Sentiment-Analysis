@@ -10,6 +10,7 @@ import random
 import sys
 from sklearn import metrics
 import re,time
+from sklearn.model_selection import train_test_split
 
 now = str(datetime.datetime.now())
 
@@ -206,14 +207,15 @@ labels = np.array(labels_list)
 
 
 array_length = len(features)
+# features = features.toarray()
 # print(type(features))
 # from sklearn.model_selection import train_test_split
-features_taken_len = int(array_length * 70/ 100)  # 80% of data make for train 20% remening data for testing
-feature_array_train = features[:features_taken_len]  # 80% of data make for train 20% remening data for testing
-labels_array_train = labels[:features_taken_len]
-feature_array_test = features[features_taken_len:]  # 80% of data make for train 20% remening data for testing
-labels_array_test =  labels[features_taken_len:]
-# feature_array_train, feature_array_test, labels_array_train, labels_array_test = train_test_split(features,labels, test_size=0.33, random_state=42)
+# features_taken_len = int(array_length * 70/ 100)  # 80% of data make for train 20% remening data for testing
+# feature_array_train = features[:features_taken_len]  # 80% of data make for train 20% remening data for testing
+# labels_array_train = labels[:features_taken_len]
+# feature_array_test = features[features_taken_len:]  # 80% of data make for train 20% remening data for testing
+# labels_array_test =  labels[features_taken_len:]
+feature_array_train, feature_array_test, labels_array_train, labels_array_test = train_test_split(features,labels, test_size=0.22, random_state=42)
 
 # print(len(feature_array_train))
 # # print(len(labels_array_train))
